@@ -18,7 +18,7 @@ const {ReactCurrentActQueue} = ReactSharedInternals;
 export function isLegacyActEnvironment(fiber: Fiber) {
   if (__DEV__) {
     // Legacy mode. We preserve the behavior of React 17's act. It assumes an
-    // act environment whenever `jest` is defined, but you can still turn off
+    // act environment whenever `jest` or `jasmine` is defined, but you can still turn off
     // spurious warnings by setting IS_REACT_ACT_ENVIRONMENT explicitly
     // to false.
 
@@ -29,9 +29,12 @@ export function isLegacyActEnvironment(fiber: Fiber) {
         : undefined;
 
     // $FlowExpectedError - Flow doesn't know about jest
-    const jestIsDefined = typeof jest !== 'undefined';
+    const jestOrJasmineIsDefined =
+      typeof jest !== 'undefined' || typeof jasmine !== 'undefined';
     return (
-      warnsIfNotActing && jestIsDefined && isReactActEnvironmentGlobal !== false
+      warnsIfNotActing &&
+      jestOrJasmineIsDefined &&
+      isReactActEnvironmentGlobal !== false
     );
   }
   return false;
